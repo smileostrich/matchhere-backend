@@ -70,6 +70,10 @@ public class SignupRequestDto {
     @ApiParam(value = "기술스택 리스트", required = false)
     private HashMap<String,String> techList;
 
+    private Boolean isAgree;
+
+    private Boolean isPAgree;
+
     public Member toMember(PasswordEncoder passwordEncoder, String email) {
         return Member.builder()
                 .email(email)
@@ -82,6 +86,8 @@ public class SignupRequestDto {
                 .position(position)
                 .is_active(Boolean.TRUE)
                 .authority(Authority.ROLE_USER)
+                .is_agree(isAgree)
+                .is_pagree(isPAgree)
                 .build();
     }
 

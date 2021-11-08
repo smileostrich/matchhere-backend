@@ -45,6 +45,8 @@ public class Member {
     private String position;
     private Boolean is_active;
     private String portfolio_uri;
+    private Boolean is_agree;
+    private Boolean is_pagree;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
@@ -60,7 +62,7 @@ public class Member {
     @Builder
     public Member(LocalDateTime create_date, String email, String name, String password,
                   String nickname, String tel, String bio, String city, Boolean banned, String position,
-                  Boolean is_active, Authority authority, DBFile cover_pic, DBFile portfolio, String portfolio_uri) {
+                  Boolean is_active, Authority authority, DBFile cover_pic, DBFile portfolio, String portfolio_uri, Boolean is_agree, Boolean is_pagree) {
         this.create_date = create_date;
         this.email = email;
         this.name = name;
@@ -76,5 +78,7 @@ public class Member {
         this.cover_pic = cover_pic;
         this.portfolio = portfolio;
         this.portfolio_uri = portfolio_uri;
+        this.is_agree = is_agree;
+        this.is_pagree = is_pagree;
     }
 }

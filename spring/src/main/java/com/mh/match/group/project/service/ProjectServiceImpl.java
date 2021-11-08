@@ -189,10 +189,16 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = findProject(projectId);
         Member member = findMember(SecurityUtil.getCurrentMemberId());
         // 권한 체크
-        MemberProject mp = memberProjectRepository.findById(
-                        new CompositeMemberProject(member, project))
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_PROJECT_NOT_FOUND));
-        if (!mp.getAuthority().equals(GroupAuthority.소유자)) {
+        Optional<MemberProject> mp = memberProjectRepository.findMemberProjectByCompositeMemberProjectMemberAndCompositeMemberProject_Project(member, project);
+//        MemberProject mp = memberProjectRepository.findById(new CompositeMemberProject(member, project))
+//                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_PROJECT_NOT_FOUND));
+//        MemberProject mp = memberProjectRepository.findById(
+//                        new CompositeMemberProject(member, project))
+//                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_PROJECT_NOT_FOUND));
+        if (mp.isEmpty()) {
+            throw new CustomException(ErrorCode.MEMBER_PROJECT_NOT_FOUND);
+        }
+        if (!mp.get().getAuthority().equals(GroupAuthority.소유자)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_CHANGE);
         }
         // 프로젝트 멤버 비활성화

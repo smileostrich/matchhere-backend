@@ -233,6 +233,9 @@ public class AuthService {
         if (memberRepository.existsByNickname(signupRequestDto.getNickname())) {
             throw new Exception("중복된 닉네임 입니다");
         }
+        if (signupRequestDto.getIsAgree().equals(Boolean.FALSE) || signupRequestDto.getIsPAgree().equals(Boolean.FALSE)) {
+            throw new Exception("약관에 동의 하지 않은 사용자입니다!");
+        }
 
         Member member = signupRequestDto.toMember(passwordEncoder, emailCheck.getEmail());
         Member ret = memberRepository.save(member);

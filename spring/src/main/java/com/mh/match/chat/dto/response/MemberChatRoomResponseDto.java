@@ -18,7 +18,7 @@ public class MemberChatRoomResponseDto {
                 .room_id(chatRoom.getId())
                 .user_id(member.getId())
                 .user_nickname(member.getNickname())
-                .pic_uri((member.getCover_pic()==null) ? null: member.getCover_pic().getDownload_uri())
+                .pic_uri((member.getCover_pic()==null) ? "" : member.getCover_pic().getDownload_uri())
                 .build();
     }
 

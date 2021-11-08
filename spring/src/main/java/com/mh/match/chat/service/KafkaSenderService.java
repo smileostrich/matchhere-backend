@@ -1,6 +1,7 @@
 package com.mh.match.chat.service;
 
 
+import com.mh.match.chat.dto.ChatMessageKafkaDto;
 import com.mh.match.chat.entity.ChatMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +14,10 @@ public class KafkaSenderService {
     private static final Logger LOGGER = LoggerFactory.getLogger(KafkaSenderService.class);
 
     @Autowired
-    private KafkaTemplate<String, ChatMessage> kafkaTemplate;
+    private KafkaTemplate<String, ChatMessageKafkaDto> kafkaTemplate;
 
-    public void send(String topic, ChatMessage data) {
-        LOGGER.info("sending data='{}' to topic='{}'", data, topic);
-        kafkaTemplate.send(topic, data);// send to react clients via websocket(STOMP)
+    public void send(String topic, ChatMessageKafkaDto data) {
+//        LOGGER.info("sending data='{}' to topic='{}'", data, topic);
+        kafkaTemplate.send(topic, data);
     }
 }

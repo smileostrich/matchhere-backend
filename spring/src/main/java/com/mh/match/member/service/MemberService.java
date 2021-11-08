@@ -465,10 +465,21 @@ public class MemberService {
         List<Project> projects = memberProjectRepository.projectInMember(member);
         List<Study> studies = memberStudyRepository.studyInMember(member);
         List<Club> clubs = memberClubRepository.findClubByMember(member);
-        List<ProjectSimpleInfoResponseDto> projectDtos = (List<ProjectSimpleInfoResponseDto>) projects.stream().map(m -> ProjectSimpleInfoResponseDto.of(m, projectTechstackSimple(m)));
-        List<StudySimpleInfoResponseDto> studyDtos = (List<StudySimpleInfoResponseDto>) studies.stream().map(m -> StudySimpleInfoResponseDto.of(m, getStudyTopics(m)));
-        List<ClubSimpleInfoResponseDto> clubDtos = (List<ClubSimpleInfoResponseDto>) clubs.stream().map(m -> ClubSimpleInfoResponseDto.of(m, getClubTopics(m)));
-
+        List<ProjectSimpleInfoResponseDto> projectDtos = new ArrayList<>();
+        List<StudySimpleInfoResponseDto> studyDtos = new ArrayList<>();
+        List<ClubSimpleInfoResponseDto> clubDtos = new ArrayList<>();
+        for (Project project : projects) {
+           projectDtos.add(ProjectSimpleInfoResponseDto.of(project, projectTechstackSimple(project)));
+        }
+        for (Study study : studies) {
+            studyDtos.add(StudySimpleInfoResponseDto.of(study, getStudyTopics(study)));
+        }
+        for (Club club : clubs) {
+            clubDtos.add(ClubSimpleInfoResponseDto.of(club, getClubTopics(club)));
+        }
+//        List<ProjectSimpleInfoResponseDto> projectDtos = (List<ProjectSimpleInfoResponseDto>) projects.stream().map(m -> ));
+//        List<StudySimpleInfoResponseDto> studyDtos = (List<StudySimpleInfoResponseDto>) studies.stream().map(m -> StudySimpleInfoResponseDto.of(m, getStudyTopics(m)));
+//        List<ClubSimpleInfoResponseDto> clubDtos = (List<ClubSimpleInfoResponseDto>) clubs.stream().map(m -> ClubSimpleInfoResponseDto.of(m, getClubTopics(m)));
         return MemberGroupResponseDto.of(projectDtos, studyDtos, clubDtos);
     }
 

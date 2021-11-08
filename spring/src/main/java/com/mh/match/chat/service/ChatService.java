@@ -1,6 +1,7 @@
 package com.mh.match.chat.service;
 
 
+import com.mh.match.chat.dto.ChatMessageKafkaDto;
 import com.mh.match.chat.dto.ChatMessageResponseDto;
 import com.mh.match.chat.dto.request.ChatMessageRequestDto;
 import com.mh.match.chat.dto.response.ChatRoomResponseDto;
@@ -72,7 +73,8 @@ public class ChatService {
             message = chatMessageRequestDto.toChatMessage(user, chatRoom.get());
         }
         chatMessageRepository.save(message);
-        kafkaSenderService.send(BOOT_TOPIC, message);
+
+        kafkaSenderService.send(BOOT_TOPIC, ChatMessageKafkaDto.of(message));
     }
 
     @Transactional
