@@ -206,10 +206,15 @@ public class ClubServiceImpl implements ClubService {
         Member member = findMember(SecurityUtil.getCurrentMemberId());
 
         checkAuthority(member, club);
-        // 클럽 멤버 비활성화
-        List<MemberClub> memberStudies = memberClubRepository.findMemberRelationInClub(club);
-        for (MemberClub mem : memberStudies) {
-            mem.deActivation();
+
+        // 클럽 게시판, 게시글, 댓글 삭제 정책 회의 후 생성
+        List<ClubBoard> clubBoards = clubBoardRepository.findAllByClub(club);
+        if (!clubBoards.isEmpty()) {
+            for (ClubBoard clubBoard : clubBoards) {
+                clubBoardService.deleteBoard(clubBoard.getId());
+            }
+            // 클럽 주제 제거
+            clubTopicRepository.deleteAllByClub(club);
         }
         // 클럽 Cover 제거
         if (club.getCoverPic() != null) {
@@ -218,14 +223,16 @@ public class ClubServiceImpl implements ClubService {
             club.initialCoverPic();
             dbFileRepository.deleteById(uuid);
         }
-        // 클럽 주제 제거
-        clubTopicRepository.deleteAllByClub(club);
+
         // 속한 스터디, 프로젝트 초기화
         initialize(club);
-        // 클럽 게시판, 게시글, 댓글 삭제 정책 회의 후 생성
-        List<ClubBoard> clubBoards = clubBoardRepository.findAllByClub(club);
-        for (ClubBoard clubBoard : clubBoards) {
-            clubBoardService.deleteBoard(clubBoard.getId());
+
+        // 클럽 멤버 비활성화
+        List<MemberClub> memberStudies = memberClubRepository.findMemberRelationInClub(club);
+        if (!memberStudies.isEmpty()) {
+            for (MemberClub mem : memberStudies) {
+                mem.deActivation();
+            }
         }
         club.deActivation();
         return HttpStatus.OK;
@@ -235,11 +242,15 @@ public class ClubServiceImpl implements ClubService {
     public void initialize(Club club) {
         List<Study> studys = studyRepository.findAllByClub(club);
         List<Project> projects = projectRepository.findAllByClub(club);
-        for (Study study : studys) {
-            study.removeClub();
+        if (!studys.isEmpty()) {
+            for (Study study : studys) {
+                study.removeClub();
+            }
         }
-        for (Project project : projects) {
-            project.removeClub();
+        if (!projects.isEmpty()) {
+            for (Project project : projects) {
+                project.removeClub();
+            }
         }
     }
 
