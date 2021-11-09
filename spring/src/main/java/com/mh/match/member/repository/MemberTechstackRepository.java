@@ -23,4 +23,5 @@ public interface MemberTechstackRepository extends JpaRepository<MemberTechstack
 
     List<MemberTechstack> findAllByCompositeMemberTechstack_Member(Member member);
 
+    void deleteAllByCompositeMemberTechstack_Member(Member member);
 }

@@ -19,4 +19,6 @@ public interface DetailPositionRepository extends JpaRepository<DetailPosition, 
     boolean existsByMemberAndName(Member member, String name);
 
     Optional<DetailPosition> findByMemberAndName(Member member, String name);
+
+    void deleteAllByMember(Member member);
 }

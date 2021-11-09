@@ -16,4 +16,6 @@ public interface CertificationRepository extends JpaRepository<Certification, Lo
     List<CertificationInterface> findAllByMember(Member member);
 
     Optional<Certification> findByMemberAndId(Member member, Long id);
+
+    void deleteAllByMember(Member member);
 }

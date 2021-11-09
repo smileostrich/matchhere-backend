@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface MemberSnsRepository extends JpaRepository<MemberSns, Integer> {
     Optional<MemberSns> findByMemberAndSnsName(Member member, String snsName);
     List<MemberSns> findAllByMember(Member member);
+
+    void deleteAllByMember(Member member);
 }

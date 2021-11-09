@@ -320,6 +320,26 @@ public class MemberService {
 
     @Transactional
     public void deleteMem(Member member) {
+//        파일 지우기
+        DBFile dbFile = member.getPortfolio();
+        if (dbFile != null) {
+            s3Service.deleteS3File("member/" + Long.toString(member.getId()) + "/portfolio/"+ dbFile.getId());
+            member.setPortfolio(null);
+            dbFileRepository.delete(dbFile);
+        }
+        DBFile coverPic = member.getCover_pic();
+        if (coverPic != null) {
+            s3Service.deleteS3File("member/" + Long.toString(member.getId()) + "/cover/"+ coverPic.getId());
+            member.setCover_pic(null);
+            dbFileRepository.delete(coverPic);
+        }
+
+        careerRepository.deleteAllByMember(member);
+        memberSnsRepository.deleteAllByMember(member);
+        detailPositionRepository.deleteAllByMember(member);
+        memberTechstackRepository.deleteAllByCompositeMemberTechstack_Member(member);
+        certificationRepository.deleteAllByMember(member);
+        educationRepository.deleteAllByMember(member);
         member.setIs_active(Boolean.FALSE);
     }
 
@@ -360,11 +380,12 @@ public class MemberService {
 
     @Transactional
     public List<MemberSns> updateSns(Member member, HashMap<String, String> snsList) {
-        List<MemberSns> memberSns = memberSnsRepository.findAllByMember(member);
+//        List<MemberSns> memberSns = memberSnsRepository.findAllByMember(member);
         List<MemberSns> output = new ArrayList<>();;
-        if (!memberSns.isEmpty()) {
-            memberSnsRepository.deleteAll(memberSns);
-        }
+//        if (!memberSns.isEmpty()) {
+//            memberSnsRepository.deleteAll(memberSns);
+//        }
+        memberSnsRepository.deleteAllByMember(member);
         if (!snsList.isEmpty()) {
             for (Map.Entry<String, String> entry : snsList.entrySet()) {
                 MemberSns inner_memberSns = MemberSns
@@ -382,10 +403,11 @@ public class MemberService {
 
     @Transactional
     public void updateDposition(Member member, List<String> dpositionList) {
-        List<DetailPosition> detailPositions = detailPositionRepository.findAllByMember(member);
-        if (!detailPositions.isEmpty()) {
-            detailPositionRepository.deleteAll(detailPositions);
-        }
+//        List<DetailPosition> detailPositions = detailPositionRepository.findAllByMember(member);
+//        if (!detailPositions.isEmpty()) {
+//            detailPositionRepository.deleteAll(detailPositions);
+//        }
+        detailPositionRepository.deleteAllByMember(member);
         if (dpositionList != null && !dpositionList.isEmpty()) {
             for (String dposition : dpositionList) {
                 DetailPosition innerDposition = DetailPosition
@@ -400,10 +422,11 @@ public class MemberService {
 
     @Transactional
     public void updateTechList(Member member, HashMap<String, String> techList) throws Exception {
-        List<MemberTechstack> memberTechstacks = memberTechstackRepository.findAllByCompositeMemberTechstack_Member(member);
-        if (!memberTechstacks.isEmpty()) {
-            memberTechstackRepository.deleteAll(memberTechstacks);
-        }
+//        List<MemberTechstack> memberTechstacks = memberTechstackRepository.findAllByCompositeMemberTechstack_Member(member);
+//        if (!memberTechstacks.isEmpty()) {
+//            memberTechstackRepository.deleteAll(memberTechstacks);
+//        }
+        memberTechstackRepository.deleteAllByCompositeMemberTechstack_Member(member);
 //        if (techList != null && !techList.isEmpty()) {
         if (!techList.isEmpty()) {
             for (Map.Entry<String, String> entry : techList.entrySet()) {

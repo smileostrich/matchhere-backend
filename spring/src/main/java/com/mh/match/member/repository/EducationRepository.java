@@ -16,4 +16,6 @@ public interface EducationRepository extends JpaRepository<Education, Long> {
     List<EducationInterface> findAllByMember(Member member);
 
     Optional<Education> findByMemberAndId(Member member, Long id);
+
+    void deleteAllByMember(Member member);
 }
