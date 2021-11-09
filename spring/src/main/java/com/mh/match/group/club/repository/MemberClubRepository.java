@@ -31,4 +31,6 @@ public interface MemberClubRepository extends JpaRepository<MemberClub, Composit
     @Query(value = "select mc.compositeMemberClub.member from matching.member_club mc "
             + "where mc.compositeMemberClub.club.id = :id and mc.isActive = true")
     List<Member> findMemberByClubId(@Param("id") Long id);
+
+    void deleteAllByCompositeMemberClub_Member(Member member);
 }

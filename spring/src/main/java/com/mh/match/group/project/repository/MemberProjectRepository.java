@@ -32,5 +32,7 @@ public interface MemberProjectRepository extends JpaRepository<MemberProject, Co
         + "where mp.compositeMemberProject.member = :member and mp.isActive = true")
     List<Project> projectInMember(@Param("member") Member member);
 
+    void deleteAllByCompositeMemberProject_Member(Member member);
+
 //    Optional<MemberProject> findMemberProjectByCompositeMemberProjectMemberAndCompositeMemberProject_Project(Member member, Project project);
 }

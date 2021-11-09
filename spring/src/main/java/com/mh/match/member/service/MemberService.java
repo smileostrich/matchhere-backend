@@ -3,6 +3,8 @@ package com.mh.match.member.service;
 import com.mh.match.common.entity.DetailPosition;
 import com.mh.match.common.entity.Level;
 import com.mh.match.common.entity.Techstack;
+import com.mh.match.common.exception.CustomException;
+import com.mh.match.common.exception.ErrorCode;
 import com.mh.match.common.repository.TechstackRepository;
 import com.mh.match.member.dto.ChangePasswordDto;
 import com.mh.match.member.dto.request.*;
@@ -340,6 +342,33 @@ public class MemberService {
         memberTechstackRepository.deleteAllByCompositeMemberTechstack_Member(member);
         certificationRepository.deleteAllByMember(member);
         educationRepository.deleteAllByMember(member);
+
+        List<Club> clubs = memberClubRepository.findClubByMember(member);
+        for (Club club: clubs) {
+            if (club.getMember().equals(member)) {
+                throw new CustomException(ErrorCode.HOST_CANNOT_LEAVE);
+            }
+        }
+        List<Study> studies = memberStudyRepository.studyInMember(member);
+        for (Study study: studies) {
+            if (study.getMember().equals(member)) {
+                throw new CustomException(ErrorCode.HOST_CANNOT_LEAVE);
+            }
+        }
+        List<Project> projects = memberProjectRepository.projectInMember(member);
+        for (Project project: projects) {
+            if (project.getMember().equals(member)) {
+                throw new CustomException(ErrorCode.HOST_CANNOT_LEAVE);
+            }
+        }
+        memberClubRepository.deleteAllByCompositeMemberClub_Member(member);
+        memberProjectRepository.deleteAllByCompositeMemberProject_Member(member);
+        memberStudyRepository.deleteAllByCompositeMemberStudy_Member(member);
+//        memberRepository.delete(member);
+
+        member.setNickname("탈퇴회원");
+        member.setName("탈퇴회원");
+        // 채팅, 가입할때 이메일 테이블, 게시판 등 때문에
         member.setIs_active(Boolean.FALSE);
     }
 

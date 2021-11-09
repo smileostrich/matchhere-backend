@@ -26,4 +26,6 @@ public interface MemberStudyRepository extends JpaRepository<MemberStudy, Compos
         + "where ms.compositeMemberStudy.member = :member and ms.isActive = true")
     List<Study> studyInMember(@Param("member") Member member);
 
+    void deleteAllByCompositeMemberStudy_Member(Member member);
+
 }
