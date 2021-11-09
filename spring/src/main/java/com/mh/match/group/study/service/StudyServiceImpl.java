@@ -215,24 +215,24 @@ public class StudyServiceImpl implements StudyService {
         Member member = findMember(SecurityUtil.getCurrentMemberId());
 
         checkAuthority(member, study);
-        // 스터디 멤버 비활성화
-        List<MemberStudy> memberStudies = memberStudyRepository.findMemberRelationInStudy(study);
-        for (MemberStudy mem : memberStudies) {
-            mem.deActivation();
-        }
-        // 스터디 Cover 제거
-        if (study.getCoverPic() != null) {
-            s3Service.deleteS3File("study/" + Long.toString(studyId) + "/cover/"+study.getCoverPic().getId());
-            String uuid = study.getCoverPic().getId();
-            study.initialCoverPic();
-            dbFileRepository.deleteById(uuid);
-        }
+
         // 스터디 주제 제거
         studyTopicRepository.deleteAllByStudy(study);
         // 스터디 게시판, 게시글, 댓글 삭제 정책 회의 후 생성
         List<StudyBoard> studyBoards = studyBoardRepository.findAllByStudy(study);
         for (StudyBoard studyBoard : studyBoards) {
             studyBoardService.deleteBoard(studyBoard.getId());
+        }
+        // 스터디 Cover 제거
+        if (study.getCoverPic() != null) {
+            s3Service.deleteS3File("study/" + Long.toString(studyId) + "/cover/"+study.getCoverPic().getId());
+            dbFileRepository.delete(study.getCoverPic());
+        }
+        study.setCoverPic(null);
+        // 스터디 멤버 비활성화
+        List<MemberStudy> memberStudies = memberStudyRepository.findMemberRelationInStudy(study);
+        for (MemberStudy mem : memberStudies) {
+            mem.deActivation();
         }
         study.deActivation();
         return HttpStatus.OK;

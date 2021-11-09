@@ -189,38 +189,34 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = findProject(projectId);
         Member member = findMember(SecurityUtil.getCurrentMemberId());
         // 권한 체크
-        Optional<MemberProject> mp = memberProjectRepository.findMemberProjectByCompositeMemberProjectMemberAndCompositeMemberProject_Project(member, project);
-//        MemberProject mp = memberProjectRepository.findById(new CompositeMemberProject(member, project))
-//                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_PROJECT_NOT_FOUND));
-//        MemberProject mp = memberProjectRepository.findById(
-//                        new CompositeMemberProject(member, project))
-//                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_PROJECT_NOT_FOUND));
-        if (mp.isEmpty()) {
-            throw new CustomException(ErrorCode.MEMBER_PROJECT_NOT_FOUND);
-        }
-        if (!mp.get().getAuthority().equals(GroupAuthority.소유자)) {
+//        Optional<MemberProject> mp = memberProjectRepository.findMemberProjectByCompositeMemberProjectMemberAndCompositeMemberProject_Project(member, project);
+        MemberProject mp = memberProjectRepository.findById(new CompositeMemberProject(member, project))
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_PROJECT_NOT_FOUND));
+        if (!mp.getAuthority().equals(GroupAuthority.소유자)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_CHANGE);
         }
+        List<ProjectBoard> projectBoards = projectBoardRepository.findAllByProject(project);
+        for (ProjectBoard projectBoard : projectBoards) {
+            projectBoardService.deleteBoard(projectBoard.getId());
+        }
+        // 프로젝트 기술 스택 제거 (안지워도 될수도?)
+        projectTechstackRepository.deleteAllByProject(project);
+
+        // 프로젝트 Cover 제거
+        if (project.getCoverPic() != null) {
+            s3Service.deleteS3File("project/" + Long.toString(projectId) + "/cover/"+project.getCoverPic().getId());
+            dbFileRepository.delete(project.getCoverPic());
+        }
+        project.setCoverPic(null);
+
         // 프로젝트 멤버 비활성화
         List<MemberProject> memberProjects = memberProjectRepository.findMemberRelationInProject(
                 project);
         for (MemberProject mem : memberProjects) {
             mem.deactivation();
         }
-        // 프로젝트 Cover 제거
-        if (project.getCoverPic() != null) {
-            s3Service.deleteS3File("project/" + Long.toString(projectId) + "/cover/"+project.getCoverPic().getId());
-            dbFileRepository.delete(project.getCoverPic());
-        }
-        // 프로젝트 기술 스택 제거 (안지워도 될수도?)
-        projectTechstackRepository.deleteAllByProject(project);
         // 프로젝트 비활성화
         project.setIsActive(Boolean.FALSE);
-        List<ProjectBoard> projectBoards = projectBoardRepository.findAllByProject(project);
-        for (ProjectBoard projectBoard : projectBoards) {
-            projectBoardService.deleteBoard(projectBoard.getId());
-        }
-
         return HttpStatus.OK;
     }
 
