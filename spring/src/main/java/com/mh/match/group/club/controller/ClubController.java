@@ -178,7 +178,7 @@ public class ClubController {
     @GetMapping("/authority/{clubId}")
     @ApiOperation(value = "현 사용자의 권한 정보", notes = "<strong>받은 클럽 id</strong>로 현 사용자에 대한 권한을 확인한다.")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "소유자, 관리자, 게스트"),
+        @ApiResponse(code = 200, message = "소유자, 관리자, 게스트, 방문객"),
         @ApiResponse(code = 404, message = "MEMBER_NOT_FOUND\nCLUB_NOT_FOUND\nMEMBER_CLUB_NOT_FOUND"),
     })
     public ResponseEntity<String> getMemberAuthority(@PathVariable("clubId") Long clubId) {

@@ -39,9 +39,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.kafka.common.utils.SecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -264,12 +269,12 @@ public class ClubServiceImpl implements ClubService {
     // 클럽 상세 조회
     public ClubInfoResponseDto getOneClub(Long clubId) {
         Club club = findClub(clubId);
-
-        String authority = getMemberAuthority(clubId);
         // 삭제된 클럽일 경우
         if (!club.getIsActive()) {
             throw new CustomException(ErrorCode.DELETED_CLUB);
         }
+        String authority = getMemberAuthority(clubId);
+
         return ClubInfoResponseDto.of(club, getClubTopics(club),
                 findMemberInClub(club).stream().map(MemberSimpleInfoResponseDto::from).collect(
                         Collectors.toList()), authority);
@@ -284,17 +289,22 @@ public class ClubServiceImpl implements ClubService {
     // 현 사용자의 권한 확인
     public String getMemberAuthority(Long clubId) {
         Club club = findClub(clubId);
-        Member member = findMember(SecurityUtil.getCurrentMemberId());
-        List<MemberClub> memberClubs = memberClubRepository.findMemberRelationInClub(club);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return "방문객";
+        } else {
+            Member member = findMember(SecurityUtil.getCurrentMemberId());
+            List<MemberClub> memberClubs = memberClubRepository.findMemberRelationInClub(club);
 
-        String authority = "게스트";
-        for (MemberClub memberClub : memberClubs) {
-            if (memberClub.getCompositeMemberClub().getMember().getId().equals(member.getId())) {
-                authority = memberClub.getAuthority().toString();
-                break;
+            String authority = "게스트";
+            for (MemberClub memberClub : memberClubs) {
+                if (memberClub.getCompositeMemberClub().getMember().getId().equals(member.getId())) {
+                    authority = memberClub.getAuthority().toString();
+                    break;
+                }
             }
+            return authority;
         }
-        return authority;
     }
 
     // 클럽 구성원 리스트
