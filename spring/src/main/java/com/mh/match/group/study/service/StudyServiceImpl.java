@@ -45,6 +45,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -249,15 +252,16 @@ public class StudyServiceImpl implements StudyService {
     public StudyInfoResponseDto getOneStudy(Long studyId) {
         Study study = findStudy(studyId);
 
+        // 삭제된 스터디일 경우
+        if (!study.getIsActive()) {
+            throw new CustomException(ErrorCode.DELETED_STUDY);
+        }
+
 //        String authority = "게스트";
         String authority = getMemberAuthority(studyId);
 
         // 비공개 스터디에는 소속된 멤버 + 초대링크를 가진 사람들만 조회하는 로직 필요
 
-        // 삭제된 스터디일 경우
-        if (!study.getIsActive()) {
-            throw new CustomException(ErrorCode.DELETED_STUDY);
-        }
         return StudyInfoResponseDto.of(study, getStudyTopics(study),
                 findMemberInStudy(study).stream().map(MemberSimpleInfoResponseDto::from).collect(
                         Collectors.toList()), authority);
@@ -272,17 +276,22 @@ public class StudyServiceImpl implements StudyService {
     // 현 사용자의 권한 확인
     public String getMemberAuthority(Long studyId) {
         Study study = findStudy(studyId);
-        Member member = findMember(SecurityUtil.getCurrentMemberId());
-        List<MemberStudy> mss = memberStudyRepository.findMemberRelationInStudy(study);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return "방문객";
+        } else {
+            Member member = findMember(SecurityUtil.getCurrentMemberId());
+            List<MemberStudy> mss = memberStudyRepository.findMemberRelationInStudy(study);
 
-        String authority = "게스트";
-        for (MemberStudy ms : mss) {
-            if (ms.getCompositeMemberStudy().getMember().getId().equals(member.getId())) {
-                authority = ms.getAuthority().toString();
-                break;
+            String authority = "게스트";
+            for (MemberStudy ms : mss) {
+                if (ms.getCompositeMemberStudy().getMember().getId().equals(member.getId())) {
+                    authority = ms.getAuthority().toString();
+                    break;
+                }
             }
+            return authority;
         }
-        return authority;
     }
 
     // 스터디 구성원 리스트
