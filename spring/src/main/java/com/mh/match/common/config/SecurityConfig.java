@@ -35,20 +35,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // swagger 관련 API 들은 전부 무시
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring()
-            .antMatchers(
-//                    "/swagger-ui/**", "/swagger-resources/**","/v2/**", "/favicon.ico",
-//                    "/**/chat/**", // chat api
-//                    "/socket/chat/**", // chat socket
-                    "/**/chat/**"
-//                    "**/topic/app/**",
-//                    "**/app/topic/**"
-                );
+        web.ignoring().antMatchers("/**/chat/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // CSRF 설정 Disable
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/project","/study","/club").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/project/**","/study/**","/club/**").permitAll();
         http.csrf().disable()
 //            .cors().configurationSource(corsConfigurationSource())
 //            .and()
@@ -70,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll() //OPTIONS 메소드 허락
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/file/downloadFile/**").permitAll()
+//                .antMatchers("/file/downloadFile/**").permitAll()
                 .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
