@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface MogkacoArticleRepository extends JpaRepository<MogakcoArticle, Long> {
+public interface MogakcoArticleRepository extends JpaRepository<MogakcoArticle, Long> {
 }
