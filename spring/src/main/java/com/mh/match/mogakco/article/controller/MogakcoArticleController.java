@@ -1,10 +1,10 @@
-package com.mh.match.mogakco.controller;
+package com.mh.match.mogakco.article.controller;
 
 
-import com.mh.match.mogakco.dto.MogakcoArticleInfoResponseDto;
-import com.mh.match.mogakco.dto.MogakcoArticleRequestDto;
-import com.mh.match.mogakco.dto.MogakcoArticleSimpleInfoResponseDto;
-import com.mh.match.mogakco.service.MogakcoArticleService;
+import com.mh.match.mogakco.article.dto.MogakcoArticleInfoResponseDto;
+import com.mh.match.mogakco.article.dto.MogakcoArticleRequestDto;
+import com.mh.match.mogakco.article.dto.MogakcoArticleSimpleInfoResponseDto;
+import com.mh.match.mogakco.article.service.MogakcoArticleService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;

@@ -1,4 +1,4 @@
-package com.mh.match.mogakco.entity;
+package com.mh.match.mogakco.article.entity;
 
 import lombok.*;
 

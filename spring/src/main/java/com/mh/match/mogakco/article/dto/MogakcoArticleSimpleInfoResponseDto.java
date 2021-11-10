@@ -1,8 +1,7 @@
-package com.mh.match.mogakco.dto;
+package com.mh.match.mogakco.article.dto;
 
-import com.mh.match.group.clubboard.article.entity.ClubArticle;
 import com.mh.match.member.dto.MemberSimpleInfoResponseDto;
-import com.mh.match.mogakco.entity.MogakcoArticle;
+import com.mh.match.mogakco.article.entity.MogakcoArticle;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.*;

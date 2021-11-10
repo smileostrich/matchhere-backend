@@ -1,19 +1,20 @@
-package com.mh.match.mogakco.service;
+package com.mh.match.mogakco.article.service;
 
 
 import com.mh.match.common.exception.CustomException;
 import com.mh.match.common.exception.ErrorCode;
 import com.mh.match.member.entity.Member;
 import com.mh.match.member.repository.MemberRepository;
-import com.mh.match.mogakco.dto.MogakcoArticleInfoResponseDto;
-import com.mh.match.mogakco.dto.MogakcoArticleRequestDto;
-import com.mh.match.mogakco.dto.MogakcoArticleSimpleInfoResponseDto;
-import com.mh.match.mogakco.entity.MogakcoArticle;
-import com.mh.match.mogakco.entity.MogakcoArticleTag;
-import com.mh.match.mogakco.entity.MogakcoContent;
-import com.mh.match.mogakco.repository.MogakcoArticleRepository;
-import com.mh.match.mogakco.repository.MogakcoArticleTagRepository;
-import com.mh.match.mogakco.repository.MogakcoContentRepository;
+import com.mh.match.mogakco.article.dto.MogakcoArticleInfoResponseDto;
+import com.mh.match.mogakco.article.dto.MogakcoArticleRequestDto;
+import com.mh.match.mogakco.article.dto.MogakcoArticleSimpleInfoResponseDto;
+import com.mh.match.mogakco.article.entity.MogakcoArticle;
+import com.mh.match.mogakco.article.entity.MogakcoArticleTag;
+import com.mh.match.mogakco.article.entity.MogakcoContent;
+import com.mh.match.mogakco.article.repository.MogakcoArticleRepository;
+import com.mh.match.mogakco.article.repository.MogakcoArticleTagRepository;
+import com.mh.match.mogakco.article.repository.MogakcoContentRepository;
+import com.mh.match.mogakco.comment.repository.MogakcoArticleCommentRepository;
 import com.mh.match.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

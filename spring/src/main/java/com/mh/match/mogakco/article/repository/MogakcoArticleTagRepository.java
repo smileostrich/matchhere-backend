@@ -1,7 +1,7 @@
-package com.mh.match.mogakco.repository;
+package com.mh.match.mogakco.article.repository;
 
-import com.mh.match.mogakco.entity.MogakcoArticle;
-import com.mh.match.mogakco.entity.MogakcoArticleTag;
+import com.mh.match.mogakco.article.entity.MogakcoArticle;
+import com.mh.match.mogakco.article.entity.MogakcoArticleTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

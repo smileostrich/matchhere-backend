@@ -1,7 +1,7 @@
-package com.mh.match.mogakco.entity;
+package com.mh.match.mogakco.article.entity;
 
 import com.mh.match.member.entity.Member;
-import com.mh.match.mogakco.dto.MogakcoArticleRequestDto;
+import com.mh.match.mogakco.article.dto.MogakcoArticleRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
