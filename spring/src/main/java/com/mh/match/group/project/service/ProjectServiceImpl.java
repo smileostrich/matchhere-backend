@@ -56,6 +56,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -243,19 +246,28 @@ public class ProjectServiceImpl implements ProjectService {
     // 현재 프로젝트 정보 리턴
     public ProjectInfoResponseDto getOneProject(Long projectId) {
         Project project = findProject(projectId);
-        Member member = findMember(SecurityUtil.getCurrentMemberId());
-        List<MemberProject> mps = memberProjectRepository.findMemberRelationInProject(project);
 
-        String authority = "게스트";
-        for (MemberProject mp : mps) {
-            if (mp.getCompositeMemberProject().getMember().getId().equals(member.getId())) {
-                authority = mp.getAuthority().toString();
-                break;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            String authority = "방문객";
+            return ProjectInfoResponseDto.of(project, projectTechstackFull(project),
+                    memberRole(project, "개발자"), memberRole(project, "기획자"), memberRole(project, "디자이너"),
+                    authority);
+        } else {
+            Member member = findMember(SecurityUtil.getCurrentMemberId());
+            List<MemberProject> mps = memberProjectRepository.findMemberRelationInProject(project);
+
+            String authority = "게스트";
+            for (MemberProject mp : mps) {
+                if (mp.getCompositeMemberProject().getMember().getId().equals(member.getId())) {
+                    authority = mp.getAuthority().toString();
+                    break;
+                }
             }
+            return ProjectInfoResponseDto.of(project, projectTechstackFull(project),
+                    memberRole(project, "개발자"), memberRole(project, "기획자"), memberRole(project, "디자이너"),
+                    authority);
         }
-        return ProjectInfoResponseDto.of(project, projectTechstackFull(project),
-                memberRole(project, "개발자"), memberRole(project, "기획자"), memberRole(project, "디자이너"),
-                authority);
     }
     // 현 사용자의 권한 확인
     public String getMemberAuthority(Long projectId){
