@@ -41,7 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // CSRF 설정 Disable
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/project/**","/study/**","/club/**","/project","/study","/club").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/project/**","/study/**","/club/**","/project","/study","/club", "/club/authority/**", "/study/authority/**", "/project/authority/**", "/mogakco").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.PUT, "/study/view-count/**", "/project/view-count/**", "/club/view-count/**").permitAll();
         http.csrf().disable()
 //            .cors().configurationSource(corsConfigurationSource())
 //            .and()

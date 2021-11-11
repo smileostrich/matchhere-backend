@@ -20,7 +20,7 @@ import java.util.List;
 public class MogakcoArticleCommentController {
     private final MogakcoCommentService mogakcoCommentService;
 
-    @PostMapping("/{articleId}/{parentId}")
+    @PostMapping("/{articleId}/comment/{parentId}")
     @ApiOperation(value = "댓글 작성", notes = "<strong>부모 댓글이라면 parentId는 0 입력</strong>")
     @ApiResponses({
             @ApiResponse(code = 200, message = "삭제되었습니다."),
@@ -31,7 +31,7 @@ public class MogakcoArticleCommentController {
         return new ResponseEntity<>(mogakcoCommentService.create(articleId, parentId, dto), HttpStatus.OK);
     }
 
-    @GetMapping("/{articleId}")
+    @GetMapping("/{articleId}/comment")
     @ApiOperation(value = "게시글 댓글 조회",
             notes = "<strong>받은 게시물 id</strong>로 게시물의 댓글 리스트를 받는다.")
     @ApiResponses({
@@ -42,7 +42,7 @@ public class MogakcoArticleCommentController {
         return new ResponseEntity<>(mogakcoCommentService.allComment(articleId), HttpStatus.OK);
     }
 
-    @PutMapping("/{commentId}")
+    @PutMapping("/comment/{commentId}")
     @ApiOperation(value = "댓글 수정", notes = "<strong>받은 댓글 정보</strong>를 사용해서 댓글을 수정한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "수정 후 정보"),
@@ -54,7 +54,7 @@ public class MogakcoArticleCommentController {
         return new ResponseEntity<>(mogakcoCommentService.update(commentId, dto), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/comment/{commentId}")
     @ApiOperation(value = "댓글 삭제", notes = "<strong>받은 댓글 Id</strong>로 댓글을 삭제한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "삭제되었습니다."),
