@@ -30,4 +30,8 @@ public class MogakcoArticleRequestDto {
     @ApiParam(value = "게시글 태그")
     private List<String> tags;
 
+    private String platform;
+
+    private String platformAddress;
+
 }

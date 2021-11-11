@@ -27,6 +27,12 @@ public class MogakcoArticle {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "platform")
+    private String platform;
+
+    @Column(name = "platform_address")
+    private String platformAddress;
+
     @Column(name = "create_date")
     private LocalDateTime createDate;
 
@@ -35,6 +41,8 @@ public class MogakcoArticle {
 
     public void update(MogakcoArticleRequestDto dto){
         this.title = dto.getTitle();
+        this.platform = dto.getPlatform();
+        this.platformAddress = dto.getPlatformAddress();
         this.modifiedDate = LocalDateTime.now();
     }
 
@@ -44,6 +52,8 @@ public class MogakcoArticle {
                 .title(dto.getTitle())
                 .createDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now())
+                .platform(dto.getPlatform())
+                .platformAddress(dto.getPlatformAddress())
                 .build();
     }
 }

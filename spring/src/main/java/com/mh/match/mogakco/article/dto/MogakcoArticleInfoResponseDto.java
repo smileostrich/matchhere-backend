@@ -24,6 +24,10 @@ public class MogakcoArticleInfoResponseDto {
     @ApiModelProperty(name = "content", example = "내용")
     private String content;
 
+    private String platform;
+
+    private String platformAddress;
+
     @ApiModelProperty(example = "[\"id\": 3, \"name\": \"문일민\", \"nickname\": \"BJP\", \"coverPicUri\":\"http://localhost:8080/api/downloadFile/97534f05-7e7f-425d-ac3e-aae8acee8a42\"]")
     @ApiParam(value = "작성자 정보(id, name, nickname, email, coverPicUri)")
     private MemberSimpleInfoResponseDto writer;
@@ -48,6 +52,8 @@ public class MogakcoArticleInfoResponseDto {
                 .writer(MemberSimpleInfoResponseDto.from(mogakcoArticle.getMember()))
                 .createdDate(mogakcoArticle.getCreateDate())
                 .modifiedDate(mogakcoArticle.getModifiedDate())
+                .platformAddress(mogakcoArticle.getPlatformAddress())
+                .platform(mogakcoArticle.getPlatform())
                 .tags(tags)
                 .build();
     }

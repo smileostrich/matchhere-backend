@@ -25,6 +25,8 @@ public class MogakcoArticleSimpleInfoResponseDto {
     @ApiParam(value = "작성자 정보(id, name, nickname, email, coverPicUri)")
     private MemberSimpleInfoResponseDto writer;
 
+    private String platform;
+
     @ApiModelProperty(name = "createdDate", example = "2021-10-01T13:09:53.46748")
     private LocalDateTime createdDate;
 
@@ -41,6 +43,7 @@ public class MogakcoArticleSimpleInfoResponseDto {
                 .writer(MemberSimpleInfoResponseDto.from(mogakcoArticle.getMember()))
                 .createdDate(mogakcoArticle.getCreateDate())
                 .modifiedDate(mogakcoArticle.getModifiedDate())
+                .platform(mogakcoArticle.getPlatform())
                 .tags(tags)
                 .build();
     }
