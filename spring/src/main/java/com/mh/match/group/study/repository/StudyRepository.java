@@ -15,12 +15,18 @@ import org.springframework.data.repository.query.Param;
 public interface StudyRepository extends JpaRepository<Study, Long> {
 
     @Query("select s from matching.study s "
-        + "where s.studyProgressState <> :studyProgressState and s.recruitmentState = :recruitmentState and s.publicScope = :publicScope and s.isActive = true")
+            + "where s.publicScope = :publicScope and s.isActive = true")
     Page<Study> findAllStudy(
-        @Param("studyProgressState") StudyProgressState studyProgressState,
-        @Param("recruitmentState") RecruitmentState recruitmentState,
-        @Param("publicScope") PublicScope publicScope,
-        Pageable pageable);
+            @Param("publicScope") PublicScope publicScope,
+            Pageable pageable);
+
+//    @Query("select s from matching.study s "
+//        + "where s.studyProgressState <> :studyProgressState and s.recruitmentState = :recruitmentState and s.publicScope = :publicScope and s.isActive = true")
+//    Page<Study> findAllStudy(
+//        @Param("studyProgressState") StudyProgressState studyProgressState,
+//        @Param("recruitmentState") RecruitmentState recruitmentState,
+//        @Param("publicScope") PublicScope publicScope,
+//        Pageable pageable);
 
     List<Study> findAllByClub(Club club);
 

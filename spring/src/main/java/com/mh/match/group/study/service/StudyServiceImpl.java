@@ -243,9 +243,11 @@ public class StudyServiceImpl implements StudyService {
 
     // 스터디 전체 조회
     public Page<StudySimpleInfoResponseDto> getAllStudy(Pageable pageable) {
-        return studyRepository.findAllStudy(StudyProgressState.FINISH, RecruitmentState.RECRUITMENT,
-                        PublicScope.PUBLIC, pageable)
+        return studyRepository.findAllStudy(PublicScope.PUBLIC, pageable)
                 .map(m -> StudySimpleInfoResponseDto.of(m, getStudyTopics(m)));
+//        return studyRepository.findAllStudy(StudyProgressState.FINISH, RecruitmentState.RECRUITMENT,
+//                        PublicScope.PUBLIC, pageable)
+//                .map(m -> StudySimpleInfoResponseDto.of(m, getStudyTopics(m)));
     }
 
     // 스터디 상세 조회
