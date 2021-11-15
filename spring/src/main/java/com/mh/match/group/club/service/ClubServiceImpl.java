@@ -212,21 +212,20 @@ public class ClubServiceImpl implements ClubService {
 
         checkAuthority(member, club);
 
+        // 클럽 주제 제거
+        clubTopicRepository.deleteAllByClub(club);
+
         // 클럽 게시판, 게시글, 댓글 삭제 정책 회의 후 생성
         List<ClubBoard> clubBoards = clubBoardRepository.findAllByClub(club);
-        if (!clubBoards.isEmpty()) {
-            for (ClubBoard clubBoard : clubBoards) {
-                clubBoardService.deleteBoard(clubBoard.getId());
-            }
-            // 클럽 주제 제거
-            clubTopicRepository.deleteAllByClub(club);
+        for (ClubBoard clubBoard : clubBoards) {
+            clubBoardService.deleteBoard(clubBoard.getId());
         }
         // 클럽 Cover 제거
         if (club.getCoverPic() != null) {
             s3Service.deleteS3File("club/" + Long.toString(clubId) + "/cover/"+ club.getCoverPic().getId());
             String uuid = club.getCoverPic().getId();
-            club.initialCoverPic();
             dbFileRepository.deleteById(uuid);
+            club.initialCoverPic();
         }
 
         // 속한 스터디, 프로젝트 초기화
