@@ -225,8 +225,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     // 모든 프로젝트 간단 조회  + (공개 범위 고려)
     public Page<ProjectSimpleInfoResponseDto> getAllProject(Pageable pageable) {
-        Page<Project> projects = projectRepository.findAllProject(ProjectProgressState.FINISH,
-                RecruitmentState.RECRUITMENT, PublicScope.PUBLIC, pageable);
+//        Page<Project> projects = projectRepository.findAllProject(ProjectProgressState.FINISH,
+//                RecruitmentState.RECRUITMENT, PublicScope.PUBLIC, pageable);
+        Page<Project> projects = projectRepository.findAllProject(PublicScope.PUBLIC, pageable);
         return projects.map(m -> ProjectSimpleInfoResponseDto.of(m, projectTechstackSimple(m)));
     }
 
