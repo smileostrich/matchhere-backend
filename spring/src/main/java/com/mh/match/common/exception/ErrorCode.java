@@ -68,6 +68,7 @@ public enum ErrorCode {
     ARTICLE_NOT_FOUND(NOT_FOUND, "게시글을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND(NOT_FOUND, "해당 댓글을 찾을 수 없습니다."),
     MEMBER_CLUB_NOT_FOUND(NOT_FOUND, "해당 멤버를 클럽에서 찾을 수 없습니다."),
+    PORTFOLIO_NOT_FOUND(NOT_FOUND, "해당 포트폴리오를 찾을 수 없습니다."),
 
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다"),

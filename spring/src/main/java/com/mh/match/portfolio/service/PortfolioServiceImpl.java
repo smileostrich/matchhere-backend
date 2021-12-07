@@ -176,7 +176,7 @@ public class PortfolioServiceImpl implements PortfolioService {
             return null;
         }
         return portfolioRepository.findById(portfolioId)
-                .orElseThrow(() -> new CustomException(ErrorCode.CLUB_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.PORTFOLIO_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
