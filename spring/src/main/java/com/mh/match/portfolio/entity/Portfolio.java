@@ -97,6 +97,8 @@ public class Portfolio {
                 .createdDate(LocalDateTime.now())
                 .member(member)
                 .bio(dto.getBio())
+                .start_date(dto.getStart_date())
+                .end_date(dto.getEnd_date())
                 .build();
     }
 

@@ -1,8 +1,11 @@
 package com.mh.match.portfolio.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
+
+import java.time.LocalDate;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,10 +19,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PortfolioCreateRequestDto {
 
-//    @ApiModelProperty(example = "3fads23-fdfd13-23d2")
-//    @ApiParam(value = "사진 고유 uuid")
-//    private String uuid;
-
     @ApiModelProperty(example = "매칭 클럽")
     @ApiParam(value = "클럽명", required = true)
     @NotBlank
@@ -28,7 +27,7 @@ public class PortfolioCreateRequestDto {
 
     @ApiModelProperty(example = "[\"플젝\", \"인맥\"]")
     @ApiParam(value = "주제")
-    private List<String> topics;
+    private List<String> tags;
 
     @ApiModelProperty(example = "Git 매칭 클럽입니다.")
     @ApiParam(value = "클럽 소개")
@@ -48,5 +47,16 @@ public class PortfolioCreateRequestDto {
     @ApiParam(value = "모집 상태", required = true)
     @NotBlank
     private String recruitmentState;
+
+    @ApiModelProperty(name = "issued_date", example = "2018-05-01")
+    @ApiParam(value = "시작일", required = true)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    @NotNull
+    private LocalDate start_date;
+
+    @ApiModelProperty(name = "expired_date", example = "2018-05-01")
+    @ApiParam(value = "종료일", required = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate end_date;
 
 }

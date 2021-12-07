@@ -9,10 +9,10 @@ import com.mh.match.portfolio.dto.request.PortfolioCreateRequestDto;
 import com.mh.match.portfolio.dto.request.PortfolioUpdateRequestDto;
 import com.mh.match.portfolio.entity.*;
 import com.mh.match.portfolio.repository.PortfolioRepository;
-import com.mh.match.portfolio.repository.PortfolioTopicRepository;
+import com.mh.match.portfolio.repository.PortfolioTagRepository;
 import com.mh.match.portfolio.dto.response.PortfolioInfoForUpdateResponseDto;
 import com.mh.match.portfolio.dto.response.PortfolioInfoResponseDto;
-import com.mh.match.portfolio.dto.response.PortfolioTopicResponseDto;
+import com.mh.match.portfolio.dto.response.PortfolioTagResponseDto;
 import com.mh.match.s3.dto.DBFileDto;
 import com.mh.match.s3.entity.DBFile;
 import com.mh.match.s3.repository.DBFileRepository;
@@ -35,7 +35,7 @@ public class PortfolioServiceImpl implements PortfolioService {
     private final MemberRepository memberRepository;
     private final PortfolioRepository portfolioRepository;
     private final DBFileRepository dbFileRepository;
-    private final PortfolioTopicRepository portfolioTopicRepository;
+    private final PortfolioTagRepository portfolioTagRepository;
     private final S3Service s3Service;
 
     // 포트폴리오 생성
@@ -48,9 +48,9 @@ public class PortfolioServiceImpl implements PortfolioService {
             DBFile dbFile = s3Service.uploadFile(file, "portfolio/" + Long.toString(portfolio.getId()) + "/cover/");
             portfolio.setCoverPic(dbFile);
         }
-        addTopics(portfolio, dto.getTopics());
+        addTags(portfolio, dto.getTags());
 
-        return PortfolioInfoResponseDto.of(portfolio, getPortfolioTopics(portfolio));
+        return PortfolioInfoResponseDto.of(portfolio, getPortfolioTags(portfolio));
     }
 
     // 포트폴리오 업데이트를 위한 정보
@@ -59,13 +59,13 @@ public class PortfolioServiceImpl implements PortfolioService {
         if (!SecurityUtil.getCurrentMemberId().equals(portfolio.getMember().getId())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_CHANGE);
         }
-        return PortfolioInfoForUpdateResponseDto.of(portfolio, getPortfolioTopics(portfolio));
+        return PortfolioInfoForUpdateResponseDto.of(portfolio, getPortfolioTags(portfolio));
     }
 
     // 포트폴리오 주제 리스트
-    private List<PortfolioTopicResponseDto> getPortfolioTopics(Portfolio portfolio) {
-        return portfolioTopicRepository.findAllByPortfolio(portfolio)
-                .stream().map(PortfolioTopicResponseDto::from).collect(Collectors.toList());
+    private List<PortfolioTagResponseDto> getPortfolioTags(Portfolio portfolio) {
+        return portfolioTagRepository.findAllByPortfolio(portfolio)
+                .stream().map(PortfolioTagResponseDto::from).collect(Collectors.toList());
     }
 
     // 포트폴리오 업데이트
@@ -78,9 +78,9 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
 
         portfolio.update(dto);
-        addTopics(portfolio, dto.getTopics());
+        addTags(portfolio, dto.getTags());
 
-        return PortfolioInfoResponseDto.of(portfolio, getPortfolioTopics(portfolio));
+        return PortfolioInfoResponseDto.of(portfolio, getPortfolioTags(portfolio));
     }
 
     // 사진 바꾸기
@@ -125,7 +125,7 @@ public class PortfolioServiceImpl implements PortfolioService {
         }
 
         // 클럽 주제 제거
-        portfolioTopicRepository.deleteAllByPortfolio(portfolio);
+        portfolioTagRepository.deleteAllByPortfolio(portfolio);
 
         // 클럽 Cover 제거
         if (portfolio.getCoverPic() != null) {
@@ -143,31 +143,31 @@ public class PortfolioServiceImpl implements PortfolioService {
 //    public Page<ClubSimpleInfoResponseDto> getAllClub(Pageable pageable) {
 //        return portfolioRepository.findAllClub(RecruitmentState.RECRUITMENT,
 //                        PublicScope.PUBLIC, pageable)
-//                .map(m -> ClubSimpleInfoResponseDto.of(m, getClubTopics(m)));
+//                .map(m -> ClubSimpleInfoResponseDto.of(m, getPortfolioTags(m)));
 //    }
 
     // 클럽 상세 조회
     public PortfolioInfoResponseDto getOnePortfolio(Long portfolioId) {
         Portfolio portfolio = findPortfolio(portfolioId);
 
-        return PortfolioInfoResponseDto.of(portfolio, getPortfolioTopics(portfolio));
+        return PortfolioInfoResponseDto.of(portfolio, getPortfolioTags(portfolio));
     }
 
     // 현재 클럽 간편 정보 리턴
 //    public ClubSimpleInfoResponseDto getOneSimpleClub(Long clubId) {
 //        Portfolio club = findClub(clubId);
-//        return ClubSimpleInfoResponseDto.of(club, getClubTopics(club));
+//        return ClubSimpleInfoResponseDto.of(club, getPortfolioTags(club));
 //    }
 
     // 클럽 주제 추가, 변경
     @Transactional
-    public void addTopics(Portfolio portfolio, List<String> topics) {
-        portfolioTopicRepository.deleteAllByPortfolio(portfolio);
-        if (topics.isEmpty()) {
+    public void addTags(Portfolio portfolio, List<String> tags) {
+        portfolioTagRepository.deleteAllByPortfolio(portfolio);
+        if (tags.isEmpty()) {
             return;
         }
-        for (String topic : topics) {
-            portfolioTopicRepository.save(PortfolioTopic.of(portfolio, topic));
+        for (String tag : tags) {
+            portfolioTagRepository.save(PortfolioTag.of(portfolio, tag));
         }
     }
 

@@ -24,7 +24,7 @@ public class PortfolioUpdateRequestDto {
 
     @ApiModelProperty(example = "[\"인맥\", \"취준\"]")
     @ApiParam(value = "주제")
-    private List<String> topics;
+    private List<String> tags;
 
     @ApiModelProperty(example = "3")
     @ApiParam(value = "클럽 제한 인원", required = true)

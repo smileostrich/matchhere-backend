@@ -46,12 +46,12 @@ public class PortfolioInfoResponseDto {
 
     @ApiModelProperty(example = "[{\"name\" : \"OS\"}, {\"name\" : \"DB\"}]")
     @ApiParam(value = "클럽 주제 정보")
-    private List<PortfolioTopicResponseDto> topics;
+    private List<PortfolioTagResponseDto> topics;
 
     @ApiModelProperty(example = "알고리즘 클럽입니다.")
     private String bio;
 
-    public static PortfolioInfoResponseDto of(Portfolio portfolio, List<PortfolioTopicResponseDto> topics) {
+    public static PortfolioInfoResponseDto of(Portfolio portfolio, List<PortfolioTagResponseDto> topics) {
         return PortfolioInfoResponseDto.builder()
                 .id(portfolio.getId())
                 .coverPic(DBFileDto.of(portfolio.getCoverPic()))

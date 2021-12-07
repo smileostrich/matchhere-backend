@@ -34,13 +34,13 @@ public class PortfolioInfoForUpdateResponseDto {
 
     @ApiModelProperty(example = "[{\"name\" : \"OS\"}, {\"name\" : \"DB\"}]")
     @ApiParam(value = "클럽 주제 정보")
-    private List<PortfolioTopicResponseDto> topics;
+    private List<PortfolioTagResponseDto> topics;
 
     @ApiModelProperty(example = "Git 매칭 프로젝트입니다.")
     @ApiParam(value = "프로젝트 소개")
     private String bio;
 
-    public static PortfolioInfoForUpdateResponseDto of(Portfolio portfolio, List<PortfolioTopicResponseDto> topics){
+    public static PortfolioInfoForUpdateResponseDto of(Portfolio portfolio, List<PortfolioTagResponseDto> topics){
         return PortfolioInfoForUpdateResponseDto.builder()
             .id(portfolio.getId())
             .name(portfolio.getName())

@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class PortfolioTopic {
+public class PortfolioTag {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,8 +33,8 @@ public class PortfolioTopic {
     @NotBlank
     private String name;
 
-    public static PortfolioTopic of(Portfolio portfolio, String name){
-        return PortfolioTopic.builder()
+    public static PortfolioTag of(Portfolio portfolio, String name){
+        return PortfolioTag.builder()
             .portfolio(portfolio)
             .name(name)
             .build();
