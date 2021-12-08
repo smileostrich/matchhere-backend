@@ -23,7 +23,7 @@ public class PortfolioCreateRequestDto {
     @ApiParam(value = "클럽명", required = true)
     @NotBlank
     @Size(min = 2, max = 100)
-    private String name;
+    private String title;
 
     @ApiModelProperty(example = "[\"플젝\", \"인맥\"]")
     @ApiParam(value = "주제")

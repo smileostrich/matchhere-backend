@@ -39,7 +39,7 @@ public class Portfolio {
 
     @NotBlank
     @Size(min = 2, max = 100)
-    private String name;
+    private String title;
 
     @Column(name = "website")
     private String website;
@@ -86,13 +86,13 @@ public class Portfolio {
     }
 
     public void update(PortfolioUpdateRequestDto dto){
-        this.name = dto.getName();
+        this.title = dto.getTitle();
         this.bio = dto.getBio();
     }
 
     public static Portfolio of(PortfolioCreateRequestDto dto, Member member){
         return Portfolio.builder()
-                .name(dto.getName())
+                .title(dto.getTitle())
                 .viewCount(0)
                 .createdDate(LocalDateTime.now())
                 .member(member)
