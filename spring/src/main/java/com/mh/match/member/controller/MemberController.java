@@ -1,5 +1,7 @@
 package com.mh.match.member.controller;
 
+import java.util.List;
+
 import com.mh.match.member.dto.ChangePasswordDto;
 import com.mh.match.member.dto.request.*;
 import com.mh.match.member.dto.response.*;
@@ -263,5 +265,22 @@ public class MemberController {
     @ApiOperation(value = "내 sns Get")
     public ResponseEntity<MemberGroupResponseDto> getMemberGroup() {
         return ResponseEntity.ok(memberService.getMemberGroup());
+    }
+
+    @PostMapping
+    public ResponseEntity createAlarm(@RequestBody MemberAlarmRequestDto memberAlarmRequestDto) {
+        memberService.addAlarm(memberAlarmRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MemberAlarmResponseDto>> getRecentAlarms() {
+        return ResponseEntity.ok(memberService.getRecentAlarms());
+    }
+
+    @PutMapping
+    public ResponseEntity updateAlarmRead(@RequestBody Long alarmNo) {
+        memberService.updateAlarmRead(alarmNo);
+        return ResponseEntity.ok().build();
     }
 }

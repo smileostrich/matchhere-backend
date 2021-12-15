@@ -1,5 +1,7 @@
 package com.mh.match.member.service;
 
+import static com.mh.match.util.CommonConstants.*;
+
 import com.mh.match.common.entity.DetailPosition;
 import com.mh.match.common.entity.Level;
 import com.mh.match.common.entity.Techstack;
@@ -39,6 +41,7 @@ import com.mh.match.group.project.repository.MemberProjectRepository;
 import com.mh.match.common.repository.DetailPositionRepository;
 import com.mh.match.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -72,8 +75,9 @@ public class MemberService {
     private final ProjectTechstackRepository projectTechstackRepository;
     private final StudyTopicRepository studyTopicRepository;
     private final ClubTopicRepository clubTopicRepository;
+    private final MemberAlarmRepository memberAlarmRepository;
     private final S3Service s3Service;
-
+    private final MessageSource messageSource;
 
     @Transactional(readOnly = true)
     public MemberMeResponseDto getMe() {
@@ -574,5 +578,25 @@ public class MemberService {
             dbFileRepository.delete(dbFile);
         }
         return HttpStatus.OK;
+    }
+
+    @Transactional
+    public void addAlarm(MemberAlarmRequestDto memberAlarmRequestDto) {
+        memberAlarmRepository.save(memberAlarmRequestDto.toAlarm());
+    }
+
+    public List<MemberAlarmResponseDto> getRecentAlarms() {
+        Long memberId = SecurityUtil.getCurrentMemberId();
+        List<AlarmContent> alarmList = memberAlarmRepository.findTop10ByMemberIdOrderByRegistYmdtDesc(memberId);
+        return alarmList.stream()
+                .map(alarmContent -> messageSource.getMessage(alarmContent.getAlarmTopic().getMessageKey(), alarmContent.getAlarmParam().split(PIPE), Locale.KOREA))
+                .map(MemberAlarmResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateAlarmRead(Long alarmNo) {
+        Alarm alarm = Objects.requireNonNull(memberAlarmRepository.findFirstById(alarmNo), "# MemberService.updateAlarmRead error. There's no alarm for alarmNo : " + alarmNo);
+        alarm.setIsRead(true);
     }
 }
