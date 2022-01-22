@@ -1,22 +1,56 @@
 package com.mh.match.member.controller;
 
 import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
-import com.mh.match.member.dto.ChangePasswordDto;
-import com.mh.match.member.dto.request.*;
-import com.mh.match.member.dto.response.*;
-import com.mh.match.member.service.MemberService;
-import com.mh.match.s3.dto.DBFileDto;
-import com.mh.match.s3.service.S3Service;
-import io.swagger.annotations.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
+import com.mh.match.member.dto.ChangePasswordDto;
+import com.mh.match.member.dto.request.MemberAlarmRequestDto;
+import com.mh.match.member.dto.request.MemberBasicInfoRequestDto;
+import com.mh.match.member.dto.request.MemberCareerRequestDto;
+import com.mh.match.member.dto.request.MemberCareerUpdateRequestDto;
+import com.mh.match.member.dto.request.MemberCertificationRequestDto;
+import com.mh.match.member.dto.request.MemberCertificationUpdateRequestDto;
+import com.mh.match.member.dto.request.MemberCheckPasswordDto;
+import com.mh.match.member.dto.request.MemberEducationRequestDto;
+import com.mh.match.member.dto.request.MemberEducationUpdateRequestDto;
+import com.mh.match.member.dto.request.MemberPortfolioRequestDto;
+import com.mh.match.member.dto.request.MemberSkillRequestDto;
+import com.mh.match.member.dto.request.MemberSnsRequestDto;
+import com.mh.match.member.dto.response.CareerResponseDto;
+import com.mh.match.member.dto.response.CertificationResponseDto;
+import com.mh.match.member.dto.response.EducationResponseDto;
+import com.mh.match.member.dto.response.MemberAlarmResponseDto;
+import com.mh.match.member.dto.response.MemberBasicinfoResponseDto;
+import com.mh.match.member.dto.response.MemberCareerAllResponseDto;
+import com.mh.match.member.dto.response.MemberGroupResponseDto;
+import com.mh.match.member.dto.response.MemberMeResponseDto;
+import com.mh.match.member.dto.response.MemberSkillResponseDto;
+import com.mh.match.member.dto.response.MemberSnsPortfolioResponseDto;
+import com.mh.match.member.dto.response.MemberSnsResponseDto;
+import com.mh.match.member.dto.response.MypageResponseDto;
+import com.mh.match.member.dto.response.PortfolioResponseDto;
+import com.mh.match.member.service.MemberService;
+import com.mh.match.s3.dto.DBFileDto;
+import com.mh.match.s3.service.S3Service;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
@@ -267,19 +301,20 @@ public class MemberController {
         return ResponseEntity.ok(memberService.getMemberGroup());
     }
 
-    @PostMapping
-    public ResponseEntity createAlarm(@RequestBody MemberAlarmRequestDto memberAlarmRequestDto) {
+    @PostMapping("/alarm")
+    public ResponseEntity createAlarm() {
+		MemberAlarmRequestDto memberAlarmRequestDto = null;
         memberService.addAlarm(memberAlarmRequestDto);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
-    public ResponseEntity<List<MemberAlarmResponseDto>> getRecentAlarms() {
-        return ResponseEntity.ok(memberService.getRecentAlarms());
+    @GetMapping("/alarms")
+    public ResponseEntity<List<MemberAlarmResponseDto>> getAlarms() {
+        return ResponseEntity.ok(memberService.getAlarms());
     }
 
-    @PutMapping
-    public ResponseEntity updateAlarmRead(@RequestBody Long alarmNo) {
+    @PutMapping("/alarm/isRead")
+    public ResponseEntity updateAlarmRead(@RequestParam Long alarmNo) {
         memberService.updateAlarmRead(alarmNo);
         return ResponseEntity.ok().build();
     }

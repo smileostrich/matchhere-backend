@@ -585,7 +585,7 @@ public class MemberService {
         memberAlarmRepository.save(memberAlarmRequestDto.toAlarm());
     }
 
-    public List<MemberAlarmResponseDto> getRecentAlarms() {
+    public List<MemberAlarmResponseDto> getAlarms() {
         Long memberId = SecurityUtil.getCurrentMemberId();
         List<AlarmContent> alarmList = memberAlarmRepository.findTop10ByMemberIdOrderByRegistYmdtDesc(memberId);
         return alarmList.stream()
